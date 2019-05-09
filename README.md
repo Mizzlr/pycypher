@@ -1,9 +1,18 @@
 # Pycypher
 A python module to parse cypher query string and generate AST.
 
-Example
+## Installation
+
+```bash
+$ git clone https://github.com/Mizzlr/pycypher
+$ cd pycypher
+$ python3 setup.py install
 ```
-$ python3
+
+## Example
+Open python3 interpreter with command `python3` and run the following.
+
+```python
 >>> from pycypher import parse
 >>> from pprint import pprint
 >>> pprint(parse('MATCH (n) RETURN Count(n);'))
