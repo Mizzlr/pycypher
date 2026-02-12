@@ -1,1039 +1,188 @@
-# Pycypher
-A python module to parse cypher query string and generate AST.
+# pycypher
+
+A Python parser for the [Cypher](https://neo4j.com/docs/cypher-manual/current/) graph query language. Parses Cypher query strings into Abstract Syntax Trees (ASTs).
+
+Built on [ANTLR 4](https://www.antlr.org/) with a patched [openCypher](https://opencypher.org/) grammar that supports modern Cypher features including subqueries, FOREACH, shortestPath, and more.
 
 ## Installation
 
 ```bash
-$ git clone https://github.com/Mizzlr/pycypher
-$ cd pycypher
-$ python3 setup.py install
+pip install pycypher
 ```
 
-## Example
-Open python3 interpreter with command `python3` and run the following.
+## Quick Start
 
 ```python
->>> import pycypher
->>> import json
->>> print(json.dumps(pycypher.parse('MATCH (n) RETURN Count(n);'), indent=2))
-{
-  "result": [
-    {
-      "node": {
-        "parent": "Cypher",
-        "text": "",
-        "sourceInterval": [
-          -1,
-          -2
-        ]
-      },
-      "children": {
-        "result": [],
-        "errors": []
-      }
-    },
-    {
-      "node": {
-        "parent": "Cypher",
-        "text": "MATCH (n) RETURN Count(n)",
-        "sourceInterval": [
-          0,
-          11
-        ]
-      },
-      "children": {
-        "result": [
-          {
-            "node": {
-              "parent": "Statement",
-              "text": "MATCH (n) RETURN Count(n)",
-              "sourceInterval": [
-                0,
-                11
-              ]
-            },
-            "children": {
-              "result": [
-                {
-                  "node": {
-                    "parent": "Query",
-                    "text": "MATCH (n) RETURN Count(n)",
-                    "sourceInterval": [
-                      0,
-                      11
-                    ]
-                  },
-                  "children": {
-                    "result": [
-                      {
-                        "node": {
-                          "parent": "RegularQuery",
-                          "text": "MATCH (n) RETURN Count(n)",
-                          "sourceInterval": [
-                            0,
-                            11
-                          ]
-                        },
-                        "children": {
-                          "result": [
-                            {
-                              "node": {
-                                "parent": "SingleQuery",
-                                "text": "MATCH (n) RETURN Count(n)",
-                                "sourceInterval": [
-                                  0,
-                                  11
-                                ]
-                              },
-                              "children": {
-                                "result": [
-                                  {
-                                    "node": {
-                                      "parent": "SinglePartQuery",
-                                      "text": "MATCH (n)",
-                                      "sourceInterval": [
-                                        0,
-                                        4
-                                      ]
-                                    },
-                                    "children": {
-                                      "result": [
-                                        {
-                                          "node": {
-                                            "parent": "ReadingClause",
-                                            "text": "MATCH (n)",
-                                            "sourceInterval": [
-                                              0,
-                                              4
-                                            ]
-                                          },
-                                          "children": {
-                                            "result": [
-                                              {
-                                                "node": {
-                                                  "parent": "Match",
-                                                  "text": "MATCH",
-                                                  "sourceInterval": [
-                                                    0,
-                                                    0
-                                                  ]
-                                                },
-                                                "children": {
-                                                  "parent": "Match",
-                                                  "text": "MATCH",
-                                                  "sourceInterval": [
-                                                    0,
-                                                    0
-                                                  ]
-                                                }
-                                              },
-                                              {
-                                                "node": {
-                                                  "parent": "Match",
-                                                  "text": " ",
-                                                  "sourceInterval": [
-                                                    1,
-                                                    1
-                                                  ]
-                                                },
-                                                "children": {
-                                                  "parent": "Match",
-                                                  "text": " ",
-                                                  "sourceInterval": [
-                                                    1,
-                                                    1
-                                                  ]
-                                                }
-                                              },
-                                              {
-                                                "node": {
-                                                  "parent": "Match",
-                                                  "text": "(n)",
-                                                  "sourceInterval": [
-                                                    2,
-                                                    4
-                                                  ]
-                                                },
-                                                "children": {
-                                                  "result": [
-                                                    {
-                                                      "node": {
-                                                        "parent": "Pattern",
-                                                        "text": "(n)",
-                                                        "sourceInterval": [
-                                                          2,
-                                                          4
-                                                        ]
-                                                      },
-                                                      "children": {
-                                                        "result": [
-                                                          {
-                                                            "node": {
-                                                              "parent": "PatternPart",
-                                                              "text": "(n)",
-                                                              "sourceInterval": [
-                                                                2,
-                                                                4
-                                                              ]
-                                                            },
-                                                            "children": {
-                                                              "result": [
-                                                                {
-                                                                  "node": {
-                                                                    "parent": "AnonymousPatternPart",
-                                                                    "text": "(n)",
-                                                                    "sourceInterval": [
-                                                                      2,
-                                                                      4
-                                                                    ]
-                                                                  },
-                                                                  "children": {
-                                                                    "result": [
-                                                                      {
-                                                                        "node": {
-                                                                          "parent": "PatternElement",
-                                                                          "text": "(n)",
-                                                                          "sourceInterval": [
-                                                                            2,
-                                                                            4
-                                                                          ]
-                                                                        },
-                                                                        "children": {
-                                                                          "result": [
-                                                                            {
-                                                                              "node": {
-                                                                                "parent": "NodePattern",
-                                                                                "text": "(",
-                                                                                "sourceInterval": [
-                                                                                  2,
-                                                                                  2
-                                                                                ]
-                                                                              },
-                                                                              "children": {
-                                                                                "parent": "NodePattern",
-                                                                                "text": "(",
-                                                                                "sourceInterval": [
-                                                                                  2,
-                                                                                  2
-                                                                                ]
-                                                                              }
-                                                                            },
-                                                                            {
-                                                                              "node": {
-                                                                                "parent": "NodePattern",
-                                                                                "text": "n",
-                                                                                "sourceInterval": [
-                                                                                  3,
-                                                                                  3
-                                                                                ]
-                                                                              },
-                                                                              "children": {
-                                                                                "result": [
-                                                                                  {
-                                                                                    "node": {
-                                                                                      "parent": "Variable",
-                                                                                      "text": "n",
-                                                                                      "sourceInterval": [
-                                                                                        3,
-                                                                                        3
-                                                                                      ]
-                                                                                    },
-                                                                                    "children": {
-                                                                                      "result": [
-                                                                                        {
-                                                                                          "node": {
-                                                                                            "parent": "SymbolicName",
-                                                                                            "text": "n",
-                                                                                            "sourceInterval": [
-                                                                                              3,
-                                                                                              3
-                                                                                            ]
-                                                                                          },
-                                                                                          "children": {
-                                                                                            "parent": "SymbolicName",
-                                                                                            "text": "n",
-                                                                                            "sourceInterval": [
-                                                                                              3,
-                                                                                              3
-                                                                                            ]
-                                                                                          }
-                                                                                        }
-                                                                                      ],
-                                                                                      "errors": []
-                                                                                    }
-                                                                                  }
-                                                                                ],
-                                                                                "errors": []
-                                                                              }
-                                                                            },
-                                                                            {
-                                                                              "node": {
-                                                                                "parent": "NodePattern",
-                                                                                "text": ")",
-                                                                                "sourceInterval": [
-                                                                                  4,
-                                                                                  4
-                                                                                ]
-                                                                              },
-                                                                              "children": {
-                                                                                "parent": "NodePattern",
-                                                                                "text": ")",
-                                                                                "sourceInterval": [
-                                                                                  4,
-                                                                                  4
-                                                                                ]
-                                                                              }
-                                                                            }
-                                                                          ],
-                                                                          "errors": []
-                                                                        }
-                                                                      }
-                                                                    ],
-                                                                    "errors": []
-                                                                  }
-                                                                }
-                                                              ],
-                                                              "errors": []
-                                                            }
-                                                          }
-                                                        ],
-                                                        "errors": []
-                                                      }
-                                                    }
-                                                  ],
-                                                  "errors": []
-                                                }
-                                              }
-                                            ],
-                                            "errors": []
-                                          }
-                                        }
-                                      ],
-                                      "errors": []
-                                    }
-                                  },
-                                  {
-                                    "node": {
-                                      "parent": "SinglePartQuery",
-                                      "text": " ",
-                                      "sourceInterval": [
-                                        5,
-                                        5
-                                      ]
-                                    },
-                                    "children": {
-                                      "parent": "SinglePartQuery",
-                                      "text": " ",
-                                      "sourceInterval": [
-                                        5,
-                                        5
-                                      ]
-                                    }
-                                  },
-                                  {
-                                    "node": {
-                                      "parent": "SinglePartQuery",
-                                      "text": "RETURN Count(n)",
-                                      "sourceInterval": [
-                                        6,
-                                        11
-                                      ]
-                                    },
-                                    "children": {
-                                      "result": [
-                                        {
-                                          "node": {
-                                            "parent": "Return",
-                                            "text": "RETURN",
-                                            "sourceInterval": [
-                                              6,
-                                              6
-                                            ]
-                                          },
-                                          "children": {
-                                            "parent": "Return",
-                                            "text": "RETURN",
-                                            "sourceInterval": [
-                                              6,
-                                              6
-                                            ]
-                                          }
-                                        },
-                                        {
-                                          "node": {
-                                            "parent": "Return",
-                                            "text": " ",
-                                            "sourceInterval": [
-                                              7,
-                                              7
-                                            ]
-                                          },
-                                          "children": {
-                                            "parent": "Return",
-                                            "text": " ",
-                                            "sourceInterval": [
-                                              7,
-                                              7
-                                            ]
-                                          }
-                                        },
-                                        {
-                                          "node": {
-                                            "parent": "Return",
-                                            "text": "Count(n)",
-                                            "sourceInterval": [
-                                              8,
-                                              11
-                                            ]
-                                          },
-                                          "children": {
-                                            "result": [
-                                              {
-                                                "node": {
-                                                  "parent": "ReturnBody",
-                                                  "text": "Count(n)",
-                                                  "sourceInterval": [
-                                                    8,
-                                                    11
-                                                  ]
-                                                },
-                                                "children": {
-                                                  "result": [
-                                                    {
-                                                      "node": {
-                                                        "parent": "ReturnItems",
-                                                        "text": "Count(n)",
-                                                        "sourceInterval": [
-                                                          8,
-                                                          11
-                                                        ]
-                                                      },
-                                                      "children": {
-                                                        "result": [
-                                                          {
-                                                            "node": {
-                                                              "parent": "ReturnItem",
-                                                              "text": "Count(n)",
-                                                              "sourceInterval": [
-                                                                8,
-                                                                11
-                                                              ]
-                                                            },
-                                                            "children": {
-                                                              "result": [
-                                                                {
-                                                                  "node": {
-                                                                    "parent": "Expression",
-                                                                    "text": "Count(n)",
-                                                                    "sourceInterval": [
-                                                                      8,
-                                                                      11
-                                                                    ]
-                                                                  },
-                                                                  "children": {
-                                                                    "result": [
-                                                                      {
-                                                                        "node": {
-                                                                          "parent": "OrExpression",
-                                                                          "text": "Count(n)",
-                                                                          "sourceInterval": [
-                                                                            8,
-                                                                            11
-                                                                          ]
-                                                                        },
-                                                                        "children": {
-                                                                          "result": [
-                                                                            {
-                                                                              "node": {
-                                                                                "parent": "XorExpression",
-                                                                                "text": "Count(n)",
-                                                                                "sourceInterval": [
-                                                                                  8,
-                                                                                  11
-                                                                                ]
-                                                                              },
-                                                                              "children": {
-                                                                                "result": [
-                                                                                  {
-                                                                                    "node": {
-                                                                                      "parent": "AndExpression",
-                                                                                      "text": "Count(n)",
-                                                                                      "sourceInterval": [
-                                                                                        8,
-                                                                                        11
-                                                                                      ]
-                                                                                    },
-                                                                                    "children": {
-                                                                                      "result": [
-                                                                                        {
-                                                                                          "node": {
-                                                                                            "parent": "NotExpression",
-                                                                                            "text": "Count(n)",
-                                                                                            "sourceInterval": [
-                                                                                              8,
-                                                                                              11
-                                                                                            ]
-                                                                                          },
-                                                                                          "children": {
-                                                                                            "result": [
-                                                                                              {
-                                                                                                "node": {
-                                                                                                  "parent": "ComparisonExpression",
-                                                                                                  "text": "Count(n)",
-                                                                                                  "sourceInterval": [
-                                                                                                    8,
-                                                                                                    11
-                                                                                                  ]
-                                                                                                },
-                                                                                                "children": {
-                                                                                                  "result": [
-                                                                                                    {
-                                                                                                      "node": {
-                                                                                                        "parent": "AddOrSubtractExpression",
-                                                                                                        "text": "Count(n)",
-                                                                                                        "sourceInterval": [
-                                                                                                          8,
-                                                                                                          11
-                                                                                                        ]
-                                                                                                      },
-                                                                                                      "children": {
-                                                                                                        "result": [
-                                                                                                          {
-                                                                                                            "node": {
-                                                                                                              "parent": "MultiplyDivideModuloExpression",
-                                                                                                              "text": "Count(n)",
-                                                                                                              "sourceInterval": [
-                                                                                                                8,
-                                                                                                                11
-                                                                                                              ]
-                                                                                                            },
-                                                                                                            "children": {
-                                                                                                              "result": [
-                                                                                                                {
-                                                                                                                  "node": {
-                                                                                                                    "parent": "PowerOfExpression",
-                                                                                                                    "text": "Count(n)",
-                                                                                                                    "sourceInterval": [
-                                                                                                                      8,
-                                                                                                                      11
-                                                                                                                    ]
-                                                                                                                  },
-                                                                                                                  "children": {
-                                                                                                                    "result": [
-                                                                                                                      {
-                                                                                                                        "node": {
-                                                                                                                          "parent": "UnaryAddOrSubtractExpression",
-                                                                                                                          "text": "Count(n)",
-                                                                                                                          "sourceInterval": [
-                                                                                                                            8,
-                                                                                                                            11
-                                                                                                                          ]
-                                                                                                                        },
-                                                                                                                        "children": {
-                                                                                                                          "result": [
-                                                                                                                            {
-                                                                                                                              "node": {
-                                                                                                                                "parent": "StringListNullOperatorExpression",
-                                                                                                                                "text": "Count(n)",
-                                                                                                                                "sourceInterval": [
-                                                                                                                                  8,
-                                                                                                                                  11
-                                                                                                                                ]
-                                                                                                                              },
-                                                                                                                              "children": {
-                                                                                                                                "result": [
-                                                                                                                                  {
-                                                                                                                                    "node": {
-                                                                                                                                      "parent": "PropertyOrLabelsExpression",
-                                                                                                                                      "text": "Count(n)",
-                                                                                                                                      "sourceInterval": [
-                                                                                                                                        8,
-                                                                                                                                        11
-                                                                                                                                      ]
-                                                                                                                                    },
-                                                                                                                                    "children": {
-                                                                                                                                      "result": [
-                                                                                                                                        {
-                                                                                                                                          "node": {
-                                                                                                                                            "parent": "Atom",
-                                                                                                                                            "text": "Count(n)",
-                                                                                                                                            "sourceInterval": [
-                                                                                                                                              8,
-                                                                                                                                              11
-                                                                                                                                            ]
-                                                                                                                                          },
-                                                                                                                                          "children": {
-                                                                                                                                            "result": [
-                                                                                                                                              {
-                                                                                                                                                "node": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": "Count",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    8,
-                                                                                                                                                    8
-                                                                                                                                                  ]
-                                                                                                                                                },
-                                                                                                                                                "children": {
-                                                                                                                                                  "result": [
-                                                                                                                                                    {
-                                                                                                                                                      "node": {
-                                                                                                                                                        "parent": "FunctionName",
-                                                                                                                                                        "text": "",
-                                                                                                                                                        "sourceInterval": [
-                                                                                                                                                          8,
-                                                                                                                                                          7
-                                                                                                                                                        ]
-                                                                                                                                                      },
-                                                                                                                                                      "children": {
-                                                                                                                                                        "result": [],
-                                                                                                                                                        "errors": []
-                                                                                                                                                      }
-                                                                                                                                                    },
-                                                                                                                                                    {
-                                                                                                                                                      "node": {
-                                                                                                                                                        "parent": "FunctionName",
-                                                                                                                                                        "text": "Count",
-                                                                                                                                                        "sourceInterval": [
-                                                                                                                                                          8,
-                                                                                                                                                          8
-                                                                                                                                                        ]
-                                                                                                                                                      },
-                                                                                                                                                      "children": {
-                                                                                                                                                        "result": [
-                                                                                                                                                          {
-                                                                                                                                                            "node": {
-                                                                                                                                                              "parent": "SymbolicName",
-                                                                                                                                                              "text": "Count",
-                                                                                                                                                              "sourceInterval": [
-                                                                                                                                                                8,
-                                                                                                                                                                8
-                                                                                                                                                              ]
-                                                                                                                                                            },
-                                                                                                                                                            "children": {
-                                                                                                                                                              "parent": "SymbolicName",
-                                                                                                                                                              "text": "Count",
-                                                                                                                                                              "sourceInterval": [
-                                                                                                                                                                8,
-                                                                                                                                                                8
-                                                                                                                                                              ]
-                                                                                                                                                            }
-                                                                                                                                                          }
-                                                                                                                                                        ],
-                                                                                                                                                        "errors": []
-                                                                                                                                                      }
-                                                                                                                                                    }
-                                                                                                                                                  ],
-                                                                                                                                                  "errors": []
-                                                                                                                                                }
-                                                                                                                                              },
-                                                                                                                                              {
-                                                                                                                                                "node": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": "(",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    9,
-                                                                                                                                                    9
-                                                                                                                                                  ]
-                                                                                                                                                },
-                                                                                                                                                "children": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": "(",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    9,
-                                                                                                                                                    9
-                                                                                                                                                  ]
-                                                                                                                                                }
-                                                                                                                                              },
-                                                                                                                                              {
-                                                                                                                                                "node": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": "n",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    10,
-                                                                                                                                                    10
-                                                                                                                                                  ]
-                                                                                                                                                },
-                                                                                                                                                "children": {
-                                                                                                                                                  "result": [
-                                                                                                                                                    {
-                                                                                                                                                      "node": {
-                                                                                                                                                        "parent": "Expression",
-                                                                                                                                                        "text": "n",
-                                                                                                                                                        "sourceInterval": [
-                                                                                                                                                          10,
-                                                                                                                                                          10
-                                                                                                                                                        ]
-                                                                                                                                                      },
-                                                                                                                                                      "children": {
-                                                                                                                                                        "result": [
-                                                                                                                                                          {
-                                                                                                                                                            "node": {
-                                                                                                                                                              "parent": "OrExpression",
-                                                                                                                                                              "text": "n",
-                                                                                                                                                              "sourceInterval": [
-                                                                                                                                                                10,
-                                                                                                                                                                10
-                                                                                                                                                              ]
-                                                                                                                                                            },
-                                                                                                                                                            "children": {
-                                                                                                                                                              "result": [
-                                                                                                                                                                {
-                                                                                                                                                                  "node": {
-                                                                                                                                                                    "parent": "XorExpression",
-                                                                                                                                                                    "text": "n",
-                                                                                                                                                                    "sourceInterval": [
-                                                                                                                                                                      10,
-                                                                                                                                                                      10
-                                                                                                                                                                    ]
-                                                                                                                                                                  },
-                                                                                                                                                                  "children": {
-                                                                                                                                                                    "result": [
-                                                                                                                                                                      {
-                                                                                                                                                                        "node": {
-                                                                                                                                                                          "parent": "AndExpression",
-                                                                                                                                                                          "text": "n",
-                                                                                                                                                                          "sourceInterval": [
-                                                                                                                                                                            10,
-                                                                                                                                                                            10
-                                                                                                                                                                          ]
-                                                                                                                                                                        },
-                                                                                                                                                                        "children": {
-                                                                                                                                                                          "result": [
-                                                                                                                                                                            {
-                                                                                                                                                                              "node": {
-                                                                                                                                                                                "parent": "NotExpression",
-                                                                                                                                                                                "text": "n",
-                                                                                                                                                                                "sourceInterval": [
-                                                                                                                                                                                  10,
-                                                                                                                                                                                  10
-                                                                                                                                                                                ]
-                                                                                                                                                                              },
-                                                                                                                                                                              "children": {
-                                                                                                                                                                                "result": [
-                                                                                                                                                                                  {
-                                                                                                                                                                                    "node": {
-                                                                                                                                                                                      "parent": "ComparisonExpression",
-                                                                                                                                                                                      "text": "n",
-                                                                                                                                                                                      "sourceInterval": [
-                                                                                                                                                                                        10,
-                                                                                                                                                                                        10
-                                                                                                                                                                                      ]
-                                                                                                                                                                                    },
-                                                                                                                                                                                    "children": {
-                                                                                                                                                                                      "result": [
-                                                                                                                                                                                        {
-                                                                                                                                                                                          "node": {
-                                                                                                                                                                                            "parent": "AddOrSubtractExpression",
-                                                                                                                                                                                            "text": "n",
-                                                                                                                                                                                            "sourceInterval": [
-                                                                                                                                                                                              10,
-                                                                                                                                                                                              10
-                                                                                                                                                                                            ]
-                                                                                                                                                                                          },
-                                                                                                                                                                                          "children": {
-                                                                                                                                                                                            "result": [
-                                                                                                                                                                                              {
-                                                                                                                                                                                                "node": {
-                                                                                                                                                                                                  "parent": "MultiplyDivideModuloExpression",
-                                                                                                                                                                                                  "text": "n",
-                                                                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                                                                    10,
-                                                                                                                                                                                                    10
-                                                                                                                                                                                                  ]
-                                                                                                                                                                                                },
-                                                                                                                                                                                                "children": {
-                                                                                                                                                                                                  "result": [
-                                                                                                                                                                                                    {
-                                                                                                                                                                                                      "node": {
-                                                                                                                                                                                                        "parent": "PowerOfExpression",
-                                                                                                                                                                                                        "text": "n",
-                                                                                                                                                                                                        "sourceInterval": [
-                                                                                                                                                                                                          10,
-                                                                                                                                                                                                          10
-                                                                                                                                                                                                        ]
-                                                                                                                                                                                                      },
-                                                                                                                                                                                                      "children": {
-                                                                                                                                                                                                        "result": [
-                                                                                                                                                                                                          {
-                                                                                                                                                                                                            "node": {
-                                                                                                                                                                                                              "parent": "UnaryAddOrSubtractExpression",
-                                                                                                                                                                                                              "text": "n",
-                                                                                                                                                                                                              "sourceInterval": [
-                                                                                                                                                                                                                10,
-                                                                                                                                                                                                                10
-                                                                                                                                                                                                              ]
-                                                                                                                                                                                                            },
-                                                                                                                                                                                                            "children": {
-                                                                                                                                                                                                              "result": [
-                                                                                                                                                                                                                {
-                                                                                                                                                                                                                  "node": {
-                                                                                                                                                                                                                    "parent": "StringListNullOperatorExpression",
-                                                                                                                                                                                                                    "text": "n",
-                                                                                                                                                                                                                    "sourceInterval": [
-                                                                                                                                                                                                                      10,
-                                                                                                                                                                                                                      10
-                                                                                                                                                                                                                    ]
-                                                                                                                                                                                                                  },
-                                                                                                                                                                                                                  "children": {
-                                                                                                                                                                                                                    "result": [
-                                                                                                                                                                                                                      {
-                                                                                                                                                                                                                        "node": {
-                                                                                                                                                                                                                          "parent": "PropertyOrLabelsExpression",
-                                                                                                                                                                                                                          "text": "n",
-                                                                                                                                                                                                                          "sourceInterval": [
-                                                                                                                                                                                                                            10,
-                                                                                                                                                                                                                            10
-                                                                                                                                                                                                                          ]
-                                                                                                                                                                                                                        },
-                                                                                                                                                                                                                        "children": {
-                                                                                                                                                                                                                          "result": [
-                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                              "node": {
-                                                                                                                                                                                                                                "parent": "Atom",
-                                                                                                                                                                                                                                "text": "n",
-                                                                                                                                                                                                                                "sourceInterval": [
-                                                                                                                                                                                                                                  10,
-                                                                                                                                                                                                                                  10
-                                                                                                                                                                                                                                ]
-                                                                                                                                                                                                                              },
-                                                                                                                                                                                                                              "children": {
-                                                                                                                                                                                                                                "result": [
-                                                                                                                                                                                                                                  {
-                                                                                                                                                                                                                                    "node": {
-                                                                                                                                                                                                                                      "parent": "Variable",
-                                                                                                                                                                                                                                      "text": "n",
-                                                                                                                                                                                                                                      "sourceInterval": [
-                                                                                                                                                                                                                                        10,
-                                                                                                                                                                                                                                        10
-                                                                                                                                                                                                                                      ]
-                                                                                                                                                                                                                                    },
-                                                                                                                                                                                                                                    "children": {
-                                                                                                                                                                                                                                      "result": [
-                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                          "node": {
-                                                                                                                                                                                                                                            "parent": "SymbolicName",
-                                                                                                                                                                                                                                            "text": "n",
-                                                                                                                                                                                                                                            "sourceInterval": [
-                                                                                                                                                                                                                                              10,
-                                                                                                                                                                                                                                              10
-                                                                                                                                                                                                                                            ]
-                                                                                                                                                                                                                                          },
-                                                                                                                                                                                                                                          "children": {
-                                                                                                                                                                                                                                            "parent": "SymbolicName",
-                                                                                                                                                                                                                                            "text": "n",
-                                                                                                                                                                                                                                            "sourceInterval": [
-                                                                                                                                                                                                                                              10,
-                                                                                                                                                                                                                                              10
-                                                                                                                                                                                                                                            ]
-                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                      ],
-                                                                                                                                                                                                                                      "errors": []
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                                ],
-                                                                                                                                                                                                                                "errors": []
-                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                          ],
-                                                                                                                                                                                                                          "errors": []
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                    ],
-                                                                                                                                                                                                                    "errors": []
-                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                              ],
-                                                                                                                                                                                                              "errors": []
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                          }
-                                                                                                                                                                                                        ],
-                                                                                                                                                                                                        "errors": []
-                                                                                                                                                                                                      }
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                  ],
-                                                                                                                                                                                                  "errors": []
-                                                                                                                                                                                                }
-                                                                                                                                                                                              }
-                                                                                                                                                                                            ],
-                                                                                                                                                                                            "errors": []
-                                                                                                                                                                                          }
-                                                                                                                                                                                        }
-                                                                                                                                                                                      ],
-                                                                                                                                                                                      "errors": []
-                                                                                                                                                                                    }
-                                                                                                                                                                                  }
-                                                                                                                                                                                ],
-                                                                                                                                                                                "errors": []
-                                                                                                                                                                              }
-                                                                                                                                                                            }
-                                                                                                                                                                          ],
-                                                                                                                                                                          "errors": []
-                                                                                                                                                                        }
-                                                                                                                                                                      }
-                                                                                                                                                                    ],
-                                                                                                                                                                    "errors": []
-                                                                                                                                                                  }
-                                                                                                                                                                }
-                                                                                                                                                              ],
-                                                                                                                                                              "errors": []
-                                                                                                                                                            }
-                                                                                                                                                          }
-                                                                                                                                                        ],
-                                                                                                                                                        "errors": []
-                                                                                                                                                      }
-                                                                                                                                                    }
-                                                                                                                                                  ],
-                                                                                                                                                  "errors": []
-                                                                                                                                                }
-                                                                                                                                              },
-                                                                                                                                              {
-                                                                                                                                                "node": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": ")",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    11,
-                                                                                                                                                    11
-                                                                                                                                                  ]
-                                                                                                                                                },
-                                                                                                                                                "children": {
-                                                                                                                                                  "parent": "FunctionInvocation",
-                                                                                                                                                  "text": ")",
-                                                                                                                                                  "sourceInterval": [
-                                                                                                                                                    11,
-                                                                                                                                                    11
-                                                                                                                                                  ]
-                                                                                                                                                }
-                                                                                                                                              }
-                                                                                                                                            ],
-                                                                                                                                            "errors": []
-                                                                                                                                          }
-                                                                                                                                        }
-                                                                                                                                      ],
-                                                                                                                                      "errors": []
-                                                                                                                                    }
-                                                                                                                                  }
-                                                                                                                                ],
-                                                                                                                                "errors": []
-                                                                                                                              }
-                                                                                                                            }
-                                                                                                                          ],
-                                                                                                                          "errors": []
-                                                                                                                        }
-                                                                                                                      }
-                                                                                                                    ],
-                                                                                                                    "errors": []
-                                                                                                                  }
-                                                                                                                }
-                                                                                                              ],
-                                                                                                              "errors": []
-                                                                                                            }
-                                                                                                          }
-                                                                                                        ],
-                                                                                                        "errors": []
-                                                                                                      }
-                                                                                                    }
-                                                                                                  ],
-                                                                                                  "errors": []
-                                                                                                }
-                                                                                              }
-                                                                                            ],
-                                                                                            "errors": []
-                                                                                          }
-                                                                                        }
-                                                                                      ],
-                                                                                      "errors": []
-                                                                                    }
-                                                                                  }
-                                                                                ],
-                                                                                "errors": []
-                                                                              }
-                                                                            }
-                                                                          ],
-                                                                          "errors": []
-                                                                        }
-                                                                      }
-                                                                    ],
-                                                                    "errors": []
-                                                                  }
-                                                                }
-                                                              ],
-                                                              "errors": []
-                                                            }
-                                                          }
-                                                        ],
-                                                        "errors": []
-                                                      }
-                                                    }
-                                                  ],
-                                                  "errors": []
-                                                }
-                                              }
-                                            ],
-                                            "errors": []
-                                          }
-                                        }
-                                      ],
-                                      "errors": []
-                                    }
-                                  }
-                                ],
-                                "errors": []
-                              }
-                            }
-                          ],
-                          "errors": []
-                        }
-                      }
-                    ],
-                    "errors": []
-                  }
-                }
-              ],
-              "errors": []
-            }
-          }
-        ],
-        "errors": []
-      }
-    },
-    {
-      "node": {
-        "parent": "Cypher",
-        "text": ";",
-        "sourceInterval": [
-          12,
-          12
-        ]
-      },
-      "children": {
-        "parent": "Cypher",
-        "text": ";",
-        "sourceInterval": [
-          12,
-          12
-        ]
-      }
-    },
-    {
-      "node": {
-        "parent": "Cypher",
-        "text": "<EOF>",
-        "sourceInterval": [
-          13,
-          13
-        ]
-      },
-      "children": {
-        "parent": "Cypher",
-        "text": "<EOF>",
-        "sourceInterval": [
-          13,
-          13
-        ]
-      }
-    }
-  ],
-  "errors": []
-}
+from pycypher import parse
+
+result = parse('MATCH (n:Person)-[:KNOWS]->(m) WHERE m.age > 30 RETURN n.name, m.name;')
+
+# Check for parse errors
+print(result['errors'])  # []
+
+# Access the AST
+for node in result['result']:
+    print(node['node']['parent'], '->', node['node']['text'][:50])
 ```
+
+## API
+
+### `parse(query_string) -> dict`
+
+Parses a Cypher query string and returns an AST dictionary.
+
+**Parameters:**
+- `query_string` (str): A Cypher query (e.g., `"MATCH (n) RETURN n;"`)
+
+**Returns:** A dict with two keys:
+- `result` - List of AST nodes. Each node has:
+  - `node` - Dict with `parent` (rule name), `text` (source text), `sourceInterval` (token range)
+  - `children` - Nested dict with `result` (child nodes) and `errors` (child parse errors)
+- `errors` - List of top-level parse error nodes
+
+### `__version__`
+
+Package version string (e.g., `"1.0.0"`).
+
+## Supported Cypher Features
+
+### Clauses
+MATCH, OPTIONAL MATCH, WHERE, RETURN, WITH, UNWIND, UNION, ORDER BY, SKIP, LIMIT, DISTINCT
+
+### Mutations
+CREATE, MERGE (ON CREATE / ON MATCH), SET, DELETE, DETACH DELETE, REMOVE, FOREACH
+
+### Expressions
+- Arithmetic: `+`, `-`, `*`, `/`, `%`, `^`
+- Comparison: `=`, `<>`, `<`, `>`, `<=`, `>=`
+- Boolean: `AND`, `OR`, `XOR`, `NOT`
+- String: `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+- Null: `IS NULL`, `IS NOT NULL`
+- Lists: `IN`, list literals, list comprehensions
+- Maps: map literals, map projections
+- CASE / WHEN / THEN / ELSE / END
+- Parameters: `$param`
+
+### Patterns
+- Node patterns: `(n)`, `(n:Label)`, `(n:Label {prop: value})`
+- Relationship patterns: `-[r:TYPE]->`, `<-[:TYPE]-`, `-[:TYPE]-`
+- Variable-length paths: `[*]`, `[*2]`, `[*1..3]`, `[*..5]`
+- `shortestPath()` and `allShortestPaths()`
+- Multiple labels: `(n:Person:Employee)`
+- Multiple relationship types: `-[:KNOWS|LIKES]->`
+
+### Functions
+- Aggregation: `count()`, `collect()`, `sum()`, `avg()`, `min()`, `max()`
+- `count(*)`, `count(DISTINCT x)`
+- Namespaced functions: `apoc.text.join()`
+- Predicate functions: `ALL()`, `ANY()`, `NONE()`, `SINGLE()`
+
+### Subqueries
+- `CALL { ... }` inline subqueries
+- `EXISTS { ... }` existence checks (pattern and full-query forms)
+- `CALL procedure() YIELD ...` procedure calls
+
+### Other
+- Backtick-escaped identifiers: `` `My Label` ``
+- Block comments: `/* ... */`
+- Line comments: `// ...`
+- Case-insensitive keywords
+
+## Examples
+
+### Basic Query
+```python
+from pycypher import parse
+
+result = parse('MATCH (n:Person) RETURN n.name;')
+assert result['errors'] == []
+```
+
+### Relationship Traversal
+```python
+result = parse('''
+    MATCH (a:Person)-[:KNOWS]->(b:Person)-[:LIVES_IN]->(c:City)
+    WHERE b.age > 25
+    RETURN a.name, b.name, c.name
+    ORDER BY b.age DESC
+    LIMIT 10
+''')
+```
+
+### Mutations
+```python
+result = parse('''
+    MERGE (n:User {id: $userId})
+    ON CREATE SET n.created = timestamp()
+    ON MATCH SET n.lastSeen = timestamp()
+    RETURN n
+''')
+```
+
+### Subqueries
+```python
+result = parse('''
+    MATCH (n:Person)
+    WHERE EXISTS {
+        MATCH (n)-[:KNOWS]->(m)
+        WHERE m.age > 30
+    }
+    CALL { MATCH (x) RETURN x LIMIT 1 }
+    RETURN n.name
+''')
+```
+
+### Error Detection
+```python
+result = parse('THIS IS NOT VALID CYPHER')
+if result['errors']:
+    print(f"Parse errors found: {len(result['errors'])}")
+```
+
+## Grammar
+
+The parser is built from ANTLR 4.13 grammar files located in `grammar/`:
+
+- `CypherLexer.g4` - Token definitions (keywords, operators, literals)
+- `CypherParser.g4` - Parser rules (statements, clauses, expressions, patterns)
+
+Based on the [antlr/grammars-v4](https://github.com/antlr/grammars-v4/tree/master/cypher) Cypher grammar (BSD license) by Boris Zhguchev, with patches for:
+- FOREACH clause
+- CALL {} subqueries (Cypher 5)
+- EXISTS { full-query } subqueries
+- shortestPath / allShortestPaths
+- Numeric token precedence fix
+
+### Regenerating the Parser
+
+If you modify the grammar:
+
+```bash
+# Download ANTLR
+curl -O https://www.antlr.org/download/antlr-4.13.2-complete.jar
+
+# Generate Python files
+java -jar antlr-4.13.2-complete.jar \
+    -Dlanguage=Python3 -visitor \
+    grammar/CypherLexer.g4 grammar/CypherParser.g4
+
+# Copy generated files into the package
+cp CypherLexer.py pycypher/lexer.py
+cp CypherParser.py pycypher/parser.py
+cp CypherParserVisitor.py pycypher/visitor.py
+cp CypherParserListener.py pycypher/listener.py
+```
+
+## Development
+
+```bash
+git clone https://github.com/Mizzlr/pycypher
+cd pycypher
+python -m venv .venv && source .venv/bin/activate
+pip install antlr4-python3-runtime pytest
+python -m pytest tests/ -v
+```
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.

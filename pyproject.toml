@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycypher"
+version = "1.0.0"
+description = "A Python parser for the Cypher graph query language, generating ASTs from query strings"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    {name = "Mushtaque Ahamed", email = "mushtaque@codenation.co.in"},
+]
+keywords = ["cypher", "neo4j", "parser", "ast", "graph", "query", "opencypher", "antlr"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "antlr4-python3-runtime>=4.13,<5",
+]
+
+[project.urls]
+Homepage = "https://github.com/Mizzlr/pycypher"
+Repository = "https://github.com/Mizzlr/pycypher"
+Issues = "https://github.com/Mizzlr/pycypher/issues"
+
+[tool.setuptools.packages.find]
+include = ["pycypher*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
